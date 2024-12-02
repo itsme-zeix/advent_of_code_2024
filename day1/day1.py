@@ -1,5 +1,3 @@
-import os
-
 def part1():
   sum_of_differences = 0
   ls_left = []
