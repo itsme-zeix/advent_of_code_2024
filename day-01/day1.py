@@ -3,7 +3,7 @@ def part1():
   ls_left = []
   ls_right = []
 
-  with open("./input.txt", "r") as f:
+  with open("./day-01/input.txt", "r") as f:
     for line in f:
       left, right = line.split()
       ls_left.append(int(left))

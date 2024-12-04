@@ -1,7 +1,7 @@
 import re
 
 def process_input():
-  with open("./day3/input.txt", "r") as f:
+  with open("./day-03/input.txt", "r") as f:
     return f.read().replace("\n", " ")
 
 def multiply(x, y):

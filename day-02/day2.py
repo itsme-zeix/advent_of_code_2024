@@ -17,7 +17,7 @@ def solve_part1():
   problematic_reports = []
   problematic_indexes = []
 
-  with open("./day2/input.txt", "r") as f:
+  with open("./day-02/input.txt", "r") as f:
     for line in f:
       total_lines += 1
       report = line.split()
