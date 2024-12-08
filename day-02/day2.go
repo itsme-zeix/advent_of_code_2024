@@ -142,6 +142,6 @@ func solvePart2(problematicReports [][]int, problematicIndexes []int, part1Solut
 func main() {
   var input [][]int = process_input()
   part1Solution, problematicReports, problematicIndexes := solvePart1(input)
-  fmt.Println("Part 1: ", part1Solution)
-  fmt.Println("Part 2: ", solvePart2(problematicReports, problematicIndexes, part1Solution))
+  fmt.Println("Part 1:", part1Solution)
+  fmt.Println("Part 2:", solvePart2(problematicReports, problematicIndexes, part1Solution))
 }
