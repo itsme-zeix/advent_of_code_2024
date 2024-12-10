@@ -10,8 +10,8 @@ def check_part1(x, y, letters, index, dx, dy):
     return 1
   
   nx, ny = x + dx, y + dy
-  if 0 <= nx < rows and 0 <= ny < cols:
-    if matrix[nx][ny] == letters[index]:
+  if 0 <= ny < rows and 0 <= nx < cols:
+    if matrix[ny][nx] == letters[index]:
       return check_part1(nx, ny, letters, index + 1, dx, dy)
   return 0
 
@@ -19,11 +19,11 @@ def solve_part1():
   directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, -1), (1, -1), (-1, 1)]
   res = 0
 
-  for r in range(rows):
-    for c in range(cols):
-      if matrix[r][c] == 'X':
+  for y in range(rows):
+    for x in range(cols):
+      if matrix[y][x] == 'X':
         for dx, dy in directions:
-          res += check_part1(r, c, ['X', 'M', 'A', 'S'], 1, dx, dy)
+          res += check_part1(x, y, ['X', 'M', 'A', 'S'], 1, dx, dy)
   return res
 
 def solve_part2():
