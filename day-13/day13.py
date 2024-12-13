@@ -14,7 +14,6 @@ def process_input():
       machines.append({"a": button_a, "b": button_b, "prize": prize})
   return machines
 
-
 def solve_part1():
   total = 0
   for machine in machines:
