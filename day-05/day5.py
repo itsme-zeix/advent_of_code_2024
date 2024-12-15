@@ -1,3 +1,5 @@
+import time
+
 def process_input():
   with open("./day-05/input.txt", "r") as f:
     lines = f.readlines()
@@ -35,7 +37,7 @@ def solve_part2():
   total = 0
   for update in updates: # O(n^3), kinda nasty but works
     fixed = False
-    
+
     while not fixed:
       fixed = True
       for i in range(len(update)):
@@ -50,7 +52,18 @@ def solve_part2():
   return total - part1_solution
 
 if __name__ == "__main__":
+  start_time = time.time()
   rules, updates = process_input()
+  end_time = time.time()
+  print(f"Processing time: {(end_time - start_time)*1e6:.1f}µs")
+
+  start_time = time.time()
   part1_solution = solve_part1()
-  print(part1_solution)
-  print(solve_part2())
+  print(f"Part 1: {part1_solution}")
+  end_time = time.time()
+  print(f"Part 1 time: {(end_time - start_time)*1e6:.3f}µs")
+
+  start_time = time.time()
+  print(f"Part 2: {solve_part2()}")
+  end_time = time.time()
+  print(f"Part 2 time: {(end_time - start_time)*1e6:.3f}µs")
