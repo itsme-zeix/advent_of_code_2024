@@ -1,5 +1,4 @@
 from functools import cache
-from itertools import permutations
 import time
 
 def process_input():
@@ -24,72 +23,50 @@ def step(curr, target, depth, max_depth):
   # of horizontal/vertical movements.
   # 
   # We continue to step through each permutation until we reach our max depth,
-  # choose the one with the minimum length, which backtracks to be summed up.
+  # return the candidate with minimum length, which is then summed up as we close the recursion.
 
-  if curr == target:
-    return 1 # To press A 
-  
   # Dynamically choose keypad
   pad = numpad if depth == 0 else arrowkeys
+
+  # Update coordinates and direction/amount to move
   cx, cy = pad[curr]
   tx, ty = pad[target]
   dx, dy = tx - cx, ty - cy
 
-  # Base case
+  # Base cases
+  if curr == target:
+    return 1 # To press A 
+
   if depth == max_depth:
     return abs(dx) + abs(dy) + 1 # +1 to press A
-
-  # Advent of Brute Force. Somehow couldn't get horizontal/vertical permutations
-  # to work properly (although it should theoretically be better to repeat moves)
-  # so I just got all permutations and brute forced it...
-  # Turns out it's not slow at all because of caching.
-  moves = ''
-  moves += '^' * -dy if dy < 0 else 'v' * dy
-  moves += '<' * -dx if dx < 0 else '>' * dx
-  perms = set(permutations(moves))
-  print(perms)
   
-  # Said 'horizontal/vertical permutations only' implementation:
-  #
-  # def get_valid_permutations(cx, cy, tx, ty, horizontal, vertical, pad):
-  #   permutations = set()
-  #   if (cx, ty) in pad.values():
-  #     permutations.add(vertical + horizontal)
-  #   if (tx, cy) in pad.values():
-  #     permutations.add(horizontal + vertical)
-  #   return permutations
-  #
-  # horizontal = '<' * -dy if dy < 0 else '>' * dy
-  # vertical = '^' * -dx if dx < 0 else 'v' * dx
-  # perms = get_valid_permutations(cx, cy, tx, ty, horizontal, vertical, pad)
+  # Generate valid permutations of movements:
+  # Only add horizontal/vertical to permutations as >>>^ is strictly better than >^>>,
+  # as >>>^ creates multiple repeated 'A' instructions that are cheaper than A + directions + A
+  # since no movement is required for multiple 'A' instructions (robot just presses A again!).
+  horizontal = '>' * dx if dx > 0 else '<' * -dx
+  vertical = 'v' * dy if dy > 0 else '^' * -dy
+  permutations = generate_valid_permutations(cx, cy, tx, ty, horizontal, vertical, pad)
 
   candidates = []
-  for p in perms:
-    pos = (cx, cy)
+  for p in permutations:
     steps = 0
-    valid = True
-
     for i, button in enumerate(p):
-      next_pos = move_position(pos, button)
-      if next_pos not in pad.values():
-        valid = False
-        break
       steps += step('A' if i == 0 else p[i - 1], button, depth + 1, max_depth)
-      pos = next_pos
+    candidates.append(steps)
 
-    if valid:
-      steps += step(p[-1], 'A', depth + 1, max_depth)
-      candidates.append(steps)
+  return min(candidates)
 
-  return min(candidates) if candidates else float('inf')
-
-def move_position(pos, direction):
-  x, y = pos
-  if direction == '^': return (x, y-1)
-  if direction == 'v': return (x, y+1)
-  if direction == '<': return (x-1, y)
-  if direction == '>': return (x+1, y)
-  return pos
+def generate_valid_permutations(cx, cy, tx, ty, horizontal, vertical, pad):
+  permutations = set()
+  # Each permutation could possibly enter an 'empty' space on the keypad as its moving from
+  # the original key position to the target key position. 
+  # These are invalid permutations which we will not add to the set of permutations.
+  if (cx, ty) in pad.values():
+    permutations.add(vertical + horizontal + 'A')
+  if (tx, cy) in pad.values():
+    permutations.add(horizontal + vertical + 'A')
+  return permutations
 
 if __name__ == "__main__":
   numpad = {
@@ -104,6 +81,7 @@ if __name__ == "__main__":
   }
 
   print(f"Part 1: {solve(2)}")
-  # curr= time.time()
-  # print(f"Part 2: {solve(25)}")
-  # print(time.time() - curr)
+  curr= time.time()
+  print(f"Part 2: {solve(25)}")
+  print(f"Part 2 took: {(time.time() - curr):.5f}s")
+  # Part 2 takes only ~0.0008s!
