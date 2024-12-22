@@ -1,5 +1,6 @@
 from functools import cache
 from itertools import permutations
+import time
 
 def process_input():
   with open("./day-21/input.txt", "r") as f:
@@ -43,9 +44,10 @@ def step(curr, target, depth, max_depth):
   # so I just got all permutations and brute forced it...
   # Turns out it's not slow at all because of caching.
   moves = ''
-  moves += '^' * -dx if dx < 0 else 'v' * dx
-  moves += '<' * -dy if dy < 0 else '>' * dy
+  moves += '^' * -dy if dy < 0 else 'v' * dy
+  moves += '<' * -dx if dx < 0 else '>' * dx
   perms = set(permutations(moves))
+  print(perms)
   
   # Said 'horizontal/vertical permutations only' implementation:
   #
@@ -83,23 +85,25 @@ def step(curr, target, depth, max_depth):
 
 def move_position(pos, direction):
   x, y = pos
-  if direction == '^': return (x-1, y)
-  if direction == 'v': return (x+1, y)
-  if direction == '<': return (x, y-1)
-  if direction == '>': return (x, y+1)
+  if direction == '^': return (x, y-1)
+  if direction == 'v': return (x, y+1)
+  if direction == '<': return (x-1, y)
+  if direction == '>': return (x+1, y)
   return pos
 
 if __name__ == "__main__":
   numpad = {
-    '7': (0, 0), '8': (0, 1), '9': (0, 2),
-    '4': (1, 0), '5': (1, 1), '6': (1, 2),
-    '1': (2, 0), '2': (2, 1), '3': (2, 2),
-                 '0': (3, 1), 'A': (3, 2)
+    '7': (0, 0), '8': (1, 0), '9': (2, 0),
+    '4': (0, 1), '5': (1, 1), '6': (2, 1),
+    '1': (0, 2), '2': (1, 2), '3': (2, 2),
+                 '0': (1, 3), 'A': (2, 3)
   }
   arrowkeys = {
-                 '^': (0, 1), 'A': (0, 2),
-    '<': (1, 0), 'v': (1, 1), '>': (1, 2)
+                 '^': (1, 0), 'A': (2, 0),
+    '<': (0, 1), 'v': (1, 1), '>': (2, 1)
   }
 
   print(f"Part 1: {solve(2)}")
-  print(f"Part 2: {solve(25)}")
+  # curr= time.time()
+  # print(f"Part 2: {solve(25)}")
+  # print(time.time() - curr)
