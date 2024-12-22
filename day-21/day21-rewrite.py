@@ -11,10 +11,13 @@ def solve(max_depth):
   res = 0
   for code in codes:
     complexity = 0
+    # Solve each character individually (expands recursively), before
+    # summing up total cost of characters to make up each code.
     for i in range(len(code)):
       steps = step('A' if i == 0 else code[i - 1], code[i], 0, max_depth)
       complexity += steps
-    res += complexity * int(code[:-1])
+    # Add complexity (cost of pressing code) * code to the total.
+    res += complexity * int(code[:-1]) 
   return res
 
 @cache
@@ -48,6 +51,8 @@ def step(curr, target, depth, max_depth):
   vertical = 'v' * dy if dy > 0 else '^' * -dy
   permutations = generate_valid_permutations(cx, cy, tx, ty, horizontal, vertical, pad)
 
+  # Perform stepping on permutations and its buttons recursively and get min. cost/steps at
+  # every level whcih sums up to get the overall best cost/steps.
   candidates = []
   for p in permutations:
     steps = 0
